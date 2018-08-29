@@ -4,6 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/FloatingPawnMovement.h"
+#include "HeadMountedDisplay.h"
+#include "WidgetComponent.h"
+#include "WidgetInteractionComponent.h"
+#include "MotionControllerComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
+#include "Camera/CameraComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "VRPawn.generated.h"
 
 UCLASS()
@@ -26,6 +35,72 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+    //Root component
+    UPROPERTY(VisibleAnywhere, Category = "VRPawn")
+    USceneComponent * DefaultSceneRoot;
+    //Camara del HMD
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    UCameraComponent * VRCamera;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    USphereComponent * ColisionHead;
+    
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    class UMotionControllerComponent * MotionControllerLeft;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    class UMotionControllerComponent * MotionControllerRight;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    UStaticMeshComponent * ViveControllerLeft;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    UStaticMeshComponent * ViveControllerRight;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+	UCapsuleComponent * ColisionControllerLeft;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+	UCapsuleComponent * ColisionControllerRight;
 	
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    UWidgetInteractionComponent * Interaction;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    UParticleSystemComponent * Laser;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    UParticleSystemComponent * EfectoImpacto;
 	
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    UFloatingPawnMovement * Movimiento;
+	
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    float Velocidad;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    bool bGrabRightArma;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    bool bGrabLeftArma;
+
+    UFUNCTION()
+    void OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+    UFUNCTION()
+    void OnBeginOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+    UFUNCTION()
+	void OnEndOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex);
+
+    UFUNCTION()
+	void OnEndOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex);
+
+	//parte sobrepuesta mas cercana al centro del control derecho
+    /*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+	AArma * OverlapedRightParte;
+
+	//parte sobrepuesta mas cercana al centro del control derecho
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+	AArma * OverlapedLeftParte;*/
 };

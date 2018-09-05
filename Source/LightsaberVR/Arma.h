@@ -27,6 +27,7 @@ public:
 	virtual void AccionPrincipal();
 
 	// Called when the game starts or when spawned
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
 	virtual void AccionSecundaria();
 
 	

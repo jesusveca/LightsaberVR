@@ -13,6 +13,7 @@
 #include "Components/SphereComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Arma.h"
 #include "VRPawn.generated.h"
 
 UCLASS()
@@ -84,6 +85,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
     bool bGrabLeftArma;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    AArma * ArmaLeft;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    AArma * ArmaRight;
+
     UFUNCTION()
     void OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
@@ -97,10 +104,10 @@ public:
 	void OnEndOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex);
 
 	//parte sobrepuesta mas cercana al centro del control derecho
-    /*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
-	AArma * OverlapedRightParte;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+	AArma * OverlapedRightArma;
 
 	//parte sobrepuesta mas cercana al centro del control derecho
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
-	AArma * OverlapedLeftParte;*/
+	AArma * OverlapedLeftArma;
 };

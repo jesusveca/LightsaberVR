@@ -4,6 +4,8 @@
 #include "Public/UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Materials/Material.h"
+#include "ProyectilEnemigo.h"
+#include "Components/SphereComponent.h"
 
 ASable::ASable() {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -21,6 +23,7 @@ ASable::ASable() {
             SableMango->SetMaterial(0, MangoMaterial.Object);
         }
     }
+    SableMango->SetCollisionProfileName(TEXT("Arma"));
 
     Laser = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Laser"));
     Laser->SetupAttachment(SableMango);
@@ -51,10 +54,13 @@ ASable::ASable() {
         }
     }
 
-    ColisionLaser = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ColiscionLaser"));
+    ColisionLaser = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ColisionLaser"));
     ColisionLaser->SetupAttachment(RootComponent);
     ColisionLaser->SetRelativeLocation(FVector(0.0f, 0.0f, 61.0f));
     ColisionLaser->InitCapsuleSize(1.5f, 51.0f);
+    ColisionLaser->SetCollisionProfileName(TEXT("Proyectil"));
+    ColisionLaser->OnComponentBeginOverlap.AddDynamic(this, &ASable::OnBeginOverlapLaser);
+    ColisionLaser->OnComponentEndOverlap.AddDynamic(this, &ASable::OnEndOverlapLaser);
 
     VelocidadActivacion = 3.0f;//escala 1 por segundo
     bAnimando = false;
@@ -103,4 +109,25 @@ void ASable::AccionPrincipal() {
         LaserExtremo->SetVisibility(true);
         //debo iniciar animacion
     }
+}
+
+void ASable::OnBeginOverlapLaser(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {
+    if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && (OtherActor != GetOwner())) { //no es necesario el ultimo, solo para este caso particular en el que no quiero que el propio conejo active esta funconalidad
+        AProyectilEnemigo * const Proyectil = Cast<AProyectilEnemigo>(OtherActor);
+        if (Proyectil && !Proyectil->IsPendingKill()) {
+            USphereComponent * const ColisionProyectil= Cast<USphereComponent>(OtherComp);//para la casa no necesito verificar que haya tocado su staticmesh
+            if (ColisionProyectil) {
+                Proyectil->RecibirGolpe();
+                    //ColisionController->GetComponentLocation() - Boton->GetComponentLocation()).Z;
+                //UE_LOG(LogClass, Log, TEXT("Tocando boton, DC: %f"), DistanciaColision);
+                /*if (ColisionController->GetName() == "ColisionControllerRight") {//podria ser util la diferencia
+                }
+                else if (ColisionController->GetName() == "ColisionControllerLeft") {
+                }*/
+            }
+        }
+    }
+}
+
+void ASable::OnEndOverlapLaser(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex) {
 }

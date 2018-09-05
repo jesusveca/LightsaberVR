@@ -45,6 +45,9 @@ public:
 	
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightSaberVR")
     UParticleSystemComponent * EfectoImpacto;
+
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
+    void RecibirGolpe();
 	
     //colisiones
     //OnBeginOverlap, necesario que este como UFUNCTION

@@ -55,4 +55,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
     virtual void AccionPrincipal() override;
 	
+    UFUNCTION()
+    void OnBeginOverlapLaser(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+    UFUNCTION()
+	void OnEndOverlapLaser(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex);
 };

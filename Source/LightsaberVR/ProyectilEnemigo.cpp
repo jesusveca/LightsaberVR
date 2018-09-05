@@ -14,7 +14,7 @@ AProyectilEnemigo::AProyectilEnemigo()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-    Velocidad = 2000.0f;
+    Velocidad = 1000.0f;
     Poder = 30.0f;
     bLanzado = false;
 
@@ -37,6 +37,7 @@ AProyectilEnemigo::AProyectilEnemigo()
     Colision = CreateDefaultSubobject<USphereComponent>(TEXT("Colision"));
     Colision->SetupAttachment(RootComponent);
     Colision->InitSphereRadius(12.5f);
+    Colision->SetCollisionProfileName(TEXT("ProyectilEnemigo"));
     Colision->OnComponentBeginOverlap.AddDynamic(this, &AProyectilEnemigo::OnBeginOverlap);
 
 
@@ -64,6 +65,10 @@ void AProyectilEnemigo::Tick(float DeltaTime)
 
 void AProyectilEnemigo::Lanzar() {
     bLanzado = true;
+}
+
+void AProyectilEnemigo::RecibirGolpe() {
+    Destroy();
 }
 
 void AProyectilEnemigo::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {

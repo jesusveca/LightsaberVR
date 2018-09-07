@@ -140,4 +140,28 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "VRPawn")
     void GrabLeftReleased();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void FirstActionRightPressed();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void FirstActionRightReleased();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void FirstActionLeftPressed();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void FirstActionLeftReleased();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void SecondActionRightPressed();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void SecondActionRightReleased();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void SecondActionLeftPressed();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void SecondActionLeftReleased();
 };

@@ -95,6 +95,8 @@ AVRPawn::AVRPawn()
 
     Movimiento = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Movimiento"));
 
+    bBuscarArmaRight = true;
+    bBuscarArmaLeft= true;
     Velocidad = 200.0f;
 
 }
@@ -111,6 +113,24 @@ void AVRPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+    float CX = GetInputAxisValue("ControllerForward");
+    float CY = GetInputAxisValue("ControllerRight");
+    float CZ = GetInputAxisValue("ControllerUp");
+    if (CX != 0.0f || CY != 0.0f || CZ != 0.0f) {
+        FVector Desplazamiento (CX, CY, CZ);
+        //MotionControllerRight->SetWorldLocation(MotionControllerRight->GetComponentLocation() + Desplazamiento.GetSafeNormal() * Velocidad/2 * DeltaTime);
+        MotionControllerRight->SetRelativeLocation(MotionControllerRight->GetRelativeTransform().GetLocation() + Desplazamiento.GetSafeNormal() * Velocidad/2 * DeltaTime);
+    }
+    float CRoll = GetInputAxisValue("ControllerRoll");
+    float CPitch = GetInputAxisValue("ControllerPitch");
+    float CYaw = GetInputAxisValue("ControllerYaw");
+    if (CRoll != 0.0f || CPitch != 0.0f || CYaw != 0.0f) {
+        FRotator Rotacion(CPitch, CYaw, CRoll);
+        MotionControllerRight->AddRelativeRotation(Rotacion);
+    }
+
+    GrabLeftTick();
+    GrabRightTick();
 }
 
 // Called to bind functionality to input
@@ -118,6 +138,32 @@ void AVRPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+    InputComponent->BindAction("GrabRight", IE_Pressed, this, &AVRPawn::GrabRightPressed);
+    InputComponent->BindAction("GrabRight", IE_Released, this, &AVRPawn::GrabRightReleased);
+    InputComponent->BindAction("GrabLeft", IE_Pressed, this, &AVRPawn::GrabLeftPressed);
+    InputComponent->BindAction("GrabLeft", IE_Released, this, &AVRPawn::GrabLeftReleased);
+
+    InputComponent->BindAction("FirstActionRight", IE_Pressed, this, &AVRPawn::FirstActionRightPressed);
+    InputComponent->BindAction("FirstActionRight", IE_Released, this, &AVRPawn::FirstActionRightReleased);
+    InputComponent->BindAction("FirstActionLeft", IE_Pressed, this, &AVRPawn::FirstActionLeftPressed);
+    InputComponent->BindAction("FirstActionLeft", IE_Released, this, &AVRPawn::FirstActionLeftReleased);
+
+    InputComponent->BindAction("SecondActionRight", IE_Pressed, this, &AVRPawn::SecondActionRightPressed);
+    InputComponent->BindAction("SecondActionRight", IE_Released, this, &AVRPawn::SecondActionRightReleased);
+    InputComponent->BindAction("SecondActionLeft", IE_Pressed, this, &AVRPawn::SecondActionLeftPressed);
+    InputComponent->BindAction("SecondActionLeft", IE_Released, this, &AVRPawn::SecondActionLeftReleased);
+
+    //InputComponent->BindAxis("MoveForward");
+    //InputComponent->BindAxis("MoveRight");
+    //InputComponent->BindAxis("MoveUp");
+
+    InputComponent->BindAxis("ControllerForward");
+    InputComponent->BindAxis("ControllerRight");
+    InputComponent->BindAxis("ControllerUp");
+
+    InputComponent->BindAxis("ControllerRoll");
+    InputComponent->BindAxis("ControllerPitch");
+    InputComponent->BindAxis("ControllerYaw");
 }
 
 void AVRPawn::OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {
@@ -162,22 +208,25 @@ void AVRPawn::OnEndOverlapControllerLeft(UPrimitiveComponent * OverlappedCompone
 }
 
 void AVRPawn::GrabRightPressed() {
-    if (OverlapedRightArma) {//encapsularlo en la funcion anterior para manter un orden
-        if (bGrabRightArma) {//este debe estar afuera, y overlaped arma es solo un temporal, al sujetar ese debe pasar a ARma
-            if (OverlapedRightArma) {
-                bBuscarArmaRight = true;
-                bGrabRightArma = false;
-                OverlapedRightArma->Soltar();
-            }
-        }
-        else {
+    if (bGrabRightArma) {//podria ser solo si ArmaRight existe
+        bBuscarArmaRight = true;
+        bGrabRightArma = false;
+        ArmaRight->Soltar();
+        ArmaRight = nullptr;
+    }
+    else {
+        if (OverlapedRightArma) {//encapsularlo en la funcion anterior para manter un orden
             bBuscarArmaRight = false;
             bGrabRightArma = true;
             //UE_LOG(LogClass, Log, TEXT("Calculando offset"));
             //PuntoReferenciaRight->SetWorldLocation(OverlapedRightBloque->GetActorLocation());
             //PuntoReferenciaRight->SetWorldRotation(OverlapedRightBloque->GetActorRotation());
             UE_LOG(LogClass, Log, TEXT("Actualizando punto referencia"));
-            OverlapedRightArma->Sujetar();
+            OverlapedRightArma->Sujetar(MotionControllerRight);
+            ArmaRight = OverlapedRightArma;
+            /*ArmaRight->AttachToComponent(MotionControllerRight, FAttachmentTransformRules::KeepRelativeTransform);
+            ArmaRight->SetActorRelativeLocation(FVector(0.0, 0.0, -2.0f));
+            ArmaRight->SetActorRelativeRotation(FRotator(270.0f, 0.0f, 0.0f));*/
             //aqui debo hacerle un attachment al motion controller y ocultar el mesh del control
             //el arma en la fucnion sujetar, debo pasarle mi componente motion controller, y la propia arma despues de quitarse las fisicas debe hacerse el attachment
             if (bGrabLeftArma && OverlapedRightArma == OverlapedLeftArma) {//debo tener cuidado de no sujetar la misma arma que mi mano izquierda
@@ -205,11 +254,11 @@ void AVRPawn::GrabRightTick() {
 
 void AVRPawn::GrabRightReleased() {
     //El codigo siguiente era por si sujetar era mientras manetgo presionado el grip, pero es muy cansado para el usuario, el soltar debe ser en el presed
-    if (OverlapedRightArma) {
+    /*if (OverlapedRightArma) {
         bBuscarArmaRight = true;
         bGrabRightArma = false;
         OverlapedRightArma->Soltar();
-    }
+    }*/
 }
 
 void AVRPawn::GrabLeftPressed() {
@@ -219,5 +268,36 @@ void AVRPawn::GrabLeftTick() {
 }
 
 void AVRPawn::GrabLeftReleased() {
+}
+
+void AVRPawn::FirstActionRightPressed() {
+    if (ArmaRight) {
+        ArmaRight->AccionPrincipal();
+    }
+}
+
+void AVRPawn::FirstActionRightReleased() {
+}
+
+void AVRPawn::FirstActionLeftPressed() {
+}
+
+void AVRPawn::FirstActionLeftReleased() {
+}
+
+void AVRPawn::SecondActionRightPressed()
+{
+}
+
+void AVRPawn::SecondActionRightReleased()
+{
+}
+
+void AVRPawn::SecondActionLeftPressed()
+{
+}
+
+void AVRPawn::SecondActionLeftReleased()
+{
 }
 

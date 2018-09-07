@@ -65,7 +65,13 @@ ASable::ASable() {
 
     VelocidadActivacion = 3.0f;//escala 1 por segundo
     bAnimando = false;
-    bActivado = true;
+    //bActivado = true;
+
+    bActivado = false;
+    Laser->SetVisibility(false);
+    LaserExtremo->SetVisibility(false);
+    Laser->SetRelativeScale3D(FVector(0.7f, 0.7f, 0.0f));
+
 }
 
 void ASable::BeginPlay() {
@@ -115,8 +121,11 @@ void ASable::AccionPrincipal() {
 void ASable::AccionSecundaria() {
 }
 
-void ASable::Sujetar() {
+void ASable::Sujetar(UMotionControllerComponent * Controller) {
     SableMango->SetSimulatePhysics(false);
+    AttachToComponent(Controller, FAttachmentTransformRules::KeepRelativeTransform);
+    SetActorRelativeLocation(FVector(0.0, 0.0, -2.0f));
+    SetActorRelativeRotation(FRotator(270.0f, 0.0f, 0.0f));
 }
 
 void ASable::Soltar() {

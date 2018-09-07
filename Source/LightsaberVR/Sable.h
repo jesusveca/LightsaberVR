@@ -59,7 +59,7 @@ public:
     virtual void AccionSecundaria() override;
 
     UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
-    virtual void Sujetar() override;
+    virtual void Sujetar(UMotionControllerComponent * Controller) override;
 
     UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
     virtual void Soltar() override;

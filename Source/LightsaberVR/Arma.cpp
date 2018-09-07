@@ -28,7 +28,7 @@ void AArma::AccionPrincipal() {
 void AArma::AccionSecundaria() {
 }
 
-void AArma::Sujetar() {
+void AArma::Sujetar(UMotionControllerComponent * Controller) {
 }
 
 void AArma::Soltar() {

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "MotionControllerComponent.h"
 #include "Arma.generated.h"
 
 UCLASS()
@@ -32,7 +33,7 @@ public:
 	virtual void AccionSecundaria();
 
     UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
-	virtual void Sujetar();
+	virtual void Sujetar(UMotionControllerComponent * Controller);
 
     UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
 	virtual void Soltar();

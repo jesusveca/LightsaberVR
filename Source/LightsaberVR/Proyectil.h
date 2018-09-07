@@ -23,6 +23,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LightSaberVR")
+    bool bLanzado;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LightSaberVR")
+    float Velocidad;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LightSaberVR")
+    float Poder;
+
+    UFUNCTION(BlueprintCallable, Category = "LightSaberVR")
+    virtual void Lanzar();
 	
 	
 };

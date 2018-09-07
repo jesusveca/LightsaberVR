@@ -4,24 +4,27 @@
 
 
 // Sets default values
-AProyectil::AProyectil()
-{
+AProyectil::AProyectil() {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+    Velocidad = 1000.0f;
+    Poder = 30.0f;
+    bLanzado = false;
 
 }
 
 // Called when the game starts or when spawned
-void AProyectil::BeginPlay()
-{
+void AProyectil::BeginPlay() {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AProyectil::Tick(float DeltaTime)
-{
+void AProyectil::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
+}
+
+void AProyectil::Lanzar() {
 }
 

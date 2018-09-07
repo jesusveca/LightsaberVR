@@ -5,7 +5,7 @@
 #include "Engine/StaticMesh.h"
 #include "Materials/Material.h"
 #include "ProyectilEnemigo.h"
-#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 
 ASable::ASable() {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -59,7 +59,6 @@ ASable::ASable() {
     ColisionLaser->SetupAttachment(RootComponent);
     ColisionLaser->SetRelativeLocation(FVector(0.0f, 0.0f, 61.0f));
     ColisionLaser->InitCapsuleSize(1.5f, 51.0f);
-    ColisionLaser->SetCollisionProfileName(TEXT("Proyectil"));
     ColisionLaser->OnComponentBeginOverlap.AddDynamic(this, &ASable::OnBeginOverlapLaser);
     ColisionLaser->OnComponentEndOverlap.AddDynamic(this, &ASable::OnEndOverlapLaser);
 

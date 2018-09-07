@@ -55,10 +55,12 @@ AVRPawn::AVRPawn()
     ViveControllerLeft = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ViveControllerLeft"));
     ViveControllerLeft->SetupAttachment(MotionControllerLeft);
     ViveControllerLeft->SetRelativeRotation(FRotator(0.0f, 90.0f, 90.0f));//ver cual es el yaw y el roll
+    ViveControllerLeft->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
     ViveControllerRight = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ViveControllerRight"));
     ViveControllerRight->SetupAttachment(MotionControllerRight);
     ViveControllerRight->SetRelativeRotation(FRotator(0.0f, 90.0f, 90.0f));
+    ViveControllerRight->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> ViveControllerMeshAsset(TEXT("StaticMesh'/Game/ControllerSetup/vr_controller_vive_1_5.vr_controller_vive_1_5'"));//de usar este creo que debo crear un obtener un  material y ponerselo, este tiene el pivot en el centro de la esfera
@@ -187,6 +189,18 @@ void AVRPawn::OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComp
 }
 
 void AVRPawn::OnBeginOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {
+    if (bBuscarArmaLeft&& !bGrabLeftArma) {
+        AArma * const Arma = Cast<AArma>(OtherActor);
+        if (Arma && !Arma->IsPendingKill()) {
+            UStaticMeshComponent * const MeshArma = Cast<UStaticMeshComponent>(OtherComp);
+            if(MeshArma){
+                if(GEngine)//no hacer esta verificación provocaba error al iniciar el editor
+                    GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("End Overlap Arma"));
+                //OverlapedRightBloque = nullptr;
+                OverlapedLeftArmas.Remove(Arma);
+            }
+        }
+    }
 }
 
 void AVRPawn::OnEndOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex) {
@@ -205,6 +219,18 @@ void AVRPawn::OnEndOverlapControllerRight(UPrimitiveComponent * OverlappedCompon
 }
 
 void AVRPawn::OnEndOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex) {
+    if (bBuscarArmaLeft && !bGrabLeftArma) {
+        AArma * const Arma = Cast<AArma>(OtherActor);
+        if (Arma && !Arma->IsPendingKill()) {
+            UStaticMeshComponent * const MeshArma = Cast<UStaticMeshComponent>(OtherComp);
+            if(MeshArma){
+                if(GEngine)//no hacer esta verificación provocaba error al iniciar el editor
+                    GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("End Overlap Arma"));
+                //OverlapedRightBloque = nullptr;
+                OverlapedLeftArmas.Remove(Arma);
+            }
+        }
+    }
 }
 
 void AVRPawn::GrabRightPressed() {
@@ -262,9 +288,48 @@ void AVRPawn::GrabRightReleased() {
 }
 
 void AVRPawn::GrabLeftPressed() {
+    if (bGrabLeftArma) {//podria ser solo si ArmaRight existe
+        bBuscarArmaLeft = true;
+        bGrabLeftArma = false;
+        ArmaLeft->Soltar();
+        ArmaLeft = nullptr;
+    }
+    else {
+        if (OverlapedLeftArma) {//encapsularlo en la funcion anterior para manter un orden
+            bBuscarArmaLeft = false;
+            bGrabLeftArma = true;
+            //UE_LOG(LogClass, Log, TEXT("Calculando offset"));
+            //PuntoReferenciaRight->SetWorldLocation(OverlapedRightBloque->GetActorLocation());
+            //PuntoReferenciaRight->SetWorldRotation(OverlapedRightBloque->GetActorRotation());
+            UE_LOG(LogClass, Log, TEXT("Actualizando punto referencia"));
+            OverlapedLeftArma->Sujetar(MotionControllerLeft);
+            ArmaLeft = OverlapedLeftArma;
+            /*ArmaRight->AttachToComponent(MotionControllerRight, FAttachmentTransformRules::KeepRelativeTransform);
+            ArmaRight->SetActorRelativeLocation(FVector(0.0, 0.0, -2.0f));
+            ArmaRight->SetActorRelativeRotation(FRotator(270.0f, 0.0f, 0.0f));*/
+            //aqui debo hacerle un attachment al motion controller y ocultar el mesh del control
+            //el arma en la fucnion sujetar, debo pasarle mi componente motion controller, y la propia arma despues de quitarse las fisicas debe hacerse el attachment
+            if (bGrabRightArma && OverlapedLeftArma == OverlapedRightArma) {//debo tener cuidado de no sujetar la misma arma que mi mano izquierda
+                //en este caso no deberia sujetar
+            }
+        }
+    }
 }
 
 void AVRPawn::GrabLeftTick() {
+    if (bBuscarArmaLeft) {
+        float Distancia = 0.0f;
+        float DistanciaMin = std::numeric_limits<float>::max();
+        OverlapedLeftArma = nullptr;
+        for (int i = 0; i < OverlapedLeftArmas.Num(); i++) {
+            Distancia = (OverlapedLeftArmas[i]->GetActorLocation() - ColisionControllerLeft->GetComponentLocation()).Size();
+            if (Distancia < DistanciaMin) {
+                OverlapedLeftArma = OverlapedLeftArmas[i];
+                DistanciaMin = Distancia;
+                //UE_LOG(LogClass, Log, TEXT("Nuevo cercano right"));
+            }
+        }
+    }
 }
 
 void AVRPawn::GrabLeftReleased() {
@@ -280,24 +345,29 @@ void AVRPawn::FirstActionRightReleased() {
 }
 
 void AVRPawn::FirstActionLeftPressed() {
+    if (ArmaLeft) {
+        ArmaLeft->AccionPrincipal();
+    }
 }
 
 void AVRPawn::FirstActionLeftReleased() {
 }
 
-void AVRPawn::SecondActionRightPressed()
-{
+void AVRPawn::SecondActionRightPressed() {
+    if (ArmaRight) {
+        ArmaRight->AccionSecundaria();
+    }
 }
 
-void AVRPawn::SecondActionRightReleased()
-{
+void AVRPawn::SecondActionRightReleased() {
 }
 
-void AVRPawn::SecondActionLeftPressed()
-{
+void AVRPawn::SecondActionLeftPressed() {
+    if (ArmaLeft) {
+        ArmaLeft->AccionSecundaria();
+    }
 }
 
-void AVRPawn::SecondActionLeftReleased()
-{
+void AVRPawn::SecondActionLeftReleased() {
 }
 

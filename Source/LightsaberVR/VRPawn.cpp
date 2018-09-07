@@ -11,6 +11,7 @@
 #include "Materials/Material.h"
 #include "Kismet/GameplayStatics.h"
 #include "Public/HeadMountedDisplayFunctionLibrary.h"
+#include <limits>
 
 
 // Sets default values
@@ -119,19 +120,104 @@ void AVRPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void AVRPawn::OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
+void AVRPawn::OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {
+    if (bBuscarArmaRight) {
+        if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && (OtherActor != GetOwner())) { //no es necesario el ultimo, solo para este caso particular en el que no quiero que el propio conejo active esta funconalidad
+            //en realidad deberia haber un if afuera de cada uno de estos, verifcando que este en alguna tarea de casa o robot, si esttoy en no task de alguno de ellos no deberia estar conviriendo
+            //ni comprobando
+            AArma * const Arma = Cast<AArma>(OtherActor);
+            if (Arma && !Arma->IsPendingKill()) {
+                UStaticMeshComponent * const MeshArma = Cast<UStaticMeshComponent>(OtherComp);//para la casa no necesito verificar que haya tocado su staticmesh
+                //no se si sera con el static mesh o con el componente colision para el arma
+                if (MeshArma) {
+                    //OverlapedRightBloque = Bloque;
+                    if (GEngine)//no hacer esta verificación provocaba error al iniciar el editor
+                        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Overlap Arma"));
+                    OverlapedRightArmas.AddUnique(Arma);
+                }
+            }
+        }
+    }
 }
 
-void AVRPawn::OnBeginOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
+void AVRPawn::OnBeginOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {
 }
 
-void AVRPawn::OnEndOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
-{
+void AVRPawn::OnEndOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex) {
+    if (bBuscarArmaRight && !bGrabRightArma) {
+        AArma * const Arma = Cast<AArma>(OtherActor);
+        if (Arma && !Arma->IsPendingKill()) {
+            UStaticMeshComponent * const MeshArma = Cast<UStaticMeshComponent>(OtherComp);
+            if(MeshArma){
+                if(GEngine)//no hacer esta verificación provocaba error al iniciar el editor
+                    GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("End Overlap Arma"));
+                //OverlapedRightBloque = nullptr;
+                OverlapedRightArmas.Remove(Arma);
+            }
+        }
+    }
 }
 
-void AVRPawn::OnEndOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
-{
+void AVRPawn::OnEndOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex) {
+}
+
+void AVRPawn::GrabRightPressed() {
+    if (OverlapedRightArma) {//encapsularlo en la funcion anterior para manter un orden
+        if (bGrabRightArma) {//este debe estar afuera, y overlaped arma es solo un temporal, al sujetar ese debe pasar a ARma
+            if (OverlapedRightArma) {
+                bBuscarArmaRight = true;
+                bGrabRightArma = false;
+                OverlapedRightArma->Soltar();
+            }
+        }
+        else {
+            bBuscarArmaRight = false;
+            bGrabRightArma = true;
+            //UE_LOG(LogClass, Log, TEXT("Calculando offset"));
+            //PuntoReferenciaRight->SetWorldLocation(OverlapedRightBloque->GetActorLocation());
+            //PuntoReferenciaRight->SetWorldRotation(OverlapedRightBloque->GetActorRotation());
+            UE_LOG(LogClass, Log, TEXT("Actualizando punto referencia"));
+            OverlapedRightArma->Sujetar();
+            //aqui debo hacerle un attachment al motion controller y ocultar el mesh del control
+            //el arma en la fucnion sujetar, debo pasarle mi componente motion controller, y la propia arma despues de quitarse las fisicas debe hacerse el attachment
+            if (bGrabLeftArma && OverlapedRightArma == OverlapedLeftArma) {//debo tener cuidado de no sujetar la misma arma que mi mano izquierda
+                //en este caso no deberia sujetar
+            }
+        }
+    }
+}
+
+void AVRPawn::GrabRightTick() {
+    if (bBuscarArmaRight) {
+        float Distancia = 0.0f;
+        float DistanciaMin = std::numeric_limits<float>::max();
+        OverlapedRightArma = nullptr;
+        for (int i = 0; i < OverlapedRightArmas.Num(); i++) {
+            Distancia = (OverlapedRightArmas[i]->GetActorLocation() - ColisionControllerRight->GetComponentLocation()).Size();
+            if (Distancia < DistanciaMin) {
+                OverlapedRightArma = OverlapedRightArmas[i];
+                DistanciaMin = Distancia;
+                //UE_LOG(LogClass, Log, TEXT("Nuevo cercano right"));
+            }
+        }
+    }
+}
+
+void AVRPawn::GrabRightReleased() {
+    //El codigo siguiente era por si sujetar era mientras manetgo presionado el grip, pero es muy cansado para el usuario, el soltar debe ser en el presed
+    if (OverlapedRightArma) {
+        bBuscarArmaRight = true;
+        bGrabRightArma = false;
+        OverlapedRightArma->Soltar();
+    }
+}
+
+void AVRPawn::GrabLeftPressed() {
+}
+
+void AVRPawn::GrabLeftTick() {
+}
+
+void AVRPawn::GrabLeftReleased() {
 }
 

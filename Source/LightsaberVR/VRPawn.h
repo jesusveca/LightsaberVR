@@ -85,11 +85,31 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
     bool bGrabLeftArma;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+	bool bBuscarArmaLeft;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+	bool bBuscarArmaRight;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
     AArma * ArmaLeft;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
     AArma * ArmaRight;
+
+	//parte sobrepuesta mas cercana al centro del control derecho
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+	AArma * OverlapedRightArma;
+
+	//parte sobrepuesta mas cercana al centro del control derecho
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+	AArma * OverlapedLeftArma;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    TArray<AArma *> OverlapedLeftArmas;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    TArray<AArma *> OverlapedRightArmas;
 
     UFUNCTION()
     void OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
@@ -103,11 +123,21 @@ public:
     UFUNCTION()
 	void OnEndOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex);
 
-	//parte sobrepuesta mas cercana al centro del control derecho
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
-	AArma * OverlapedRightArma;
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void GrabRightPressed();
 
-	//parte sobrepuesta mas cercana al centro del control derecho
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
-	AArma * OverlapedLeftArma;
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void GrabRightTick();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void GrabRightReleased();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void GrabLeftPressed();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void GrabLeftTick();
+
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
+    void GrabLeftReleased();
 };

@@ -24,11 +24,18 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called when the game starts or when spawned
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
 	virtual void AccionPrincipal();
 
 	// Called when the game starts or when spawned
     UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
 	virtual void AccionSecundaria();
+
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
+	virtual void Sujetar();
+
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
+	virtual void Soltar();
 
 	
 	

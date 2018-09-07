@@ -28,3 +28,8 @@ void AArma::AccionPrincipal() {
 void AArma::AccionSecundaria() {
 }
 
+void AArma::Sujetar() {
+}
+
+void AArma::Soltar() {
+}

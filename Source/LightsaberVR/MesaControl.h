@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Boton.h"
 #include "MesaControl.generated.h"
 
 UCLASS()
@@ -23,6 +24,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
+    UStaticMeshComponent * Mesh;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
+    ABoton * BotonIniciar;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
+    ABoton * BotonSalir;
 	
 	
 };

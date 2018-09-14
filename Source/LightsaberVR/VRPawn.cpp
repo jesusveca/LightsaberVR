@@ -197,7 +197,7 @@ void AVRPawn::OnBeginOverlapControllerLeft(UPrimitiveComponent * OverlappedCompo
                 if(GEngine)//no hacer esta verificación provocaba error al iniciar el editor
                     GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("End Overlap Arma"));
                 //OverlapedRightBloque = nullptr;
-                OverlapedLeftArmas.Remove(Arma);
+                OverlapedLeftArmas.AddUnique(Arma);
             }
         }
     }

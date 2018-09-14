@@ -70,6 +70,7 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
     UParticleSystemComponent * Laser;
 
+
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
     UParticleSystemComponent * EfectoImpacto;
 	

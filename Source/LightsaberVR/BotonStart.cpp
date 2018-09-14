@@ -8,6 +8,7 @@
 #include "VRPawn.h"
 #include "Engine/Engine.h"
 #include "Engine/StaticMesh.h"
+#include "LightsaberVRGameModeBase.h"
 
 ABotonStart::ABotonStart() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -64,6 +65,20 @@ ABotonStart::ABotonStart() {
 void ABotonStart::BeginPlay() {
     Super::BeginPlay();
     //Boton->SetRelativeLocation(FVector(0.0f, 0.0f, -10.0f));
+}
+
+void ABotonStart::SendSignalPressed() {
+    Super::SendSignalPressed();
+    AGameModeBase * GameMode = UGameplayStatics::GetGameMode(GetWorld());
+    ALightsaberVRGameModeBase * LightGameMode = Cast<ALightsaberVRGameModeBase>(GameMode);
+    if (LightGameMode) {
+        //LightGameMode->StartGame();
+
+    }
+}
+
+void ABotonStart::SendSignalReleased() {
+    UE_LOG(LogClass, Log, TEXT("Send Signal Released"));
 }
 
 void ABotonStart::Tick(float DeltaTime) {

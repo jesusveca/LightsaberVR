@@ -24,58 +24,58 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     UStaticMeshComponent * Boton;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Transformation")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
 	UMaterial * MaterialNormal;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Transformation")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
 	UMaterial * MaterialPresionado;
 	
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     bool bPressed;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     bool bPressing;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     bool bPosicionNormal;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     bool bPosicionPresionado;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     bool bPosicionContacto;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     bool bPosicionFondo;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     float AlturaNormal;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     float AlturaPresionado;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     float AlturaContacto;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     float AlturaFondo;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     float VelocidadNormal;
 
-    UFUNCTION(BlueprintCallable, Category = "Transformation")
-    void SendSignalPressed();
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
+    virtual void SendSignalPressed();
 
-    UFUNCTION(BlueprintCallable, Category = "Transformation")
-    void SendSignalReleased();
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
+    virtual void SendSignalReleased();
 
-    UFUNCTION(BlueprintCallable, Category = "Transformation")
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
     void Presionado();
 
-    UFUNCTION(BlueprintCallable, Category = "Transformation")
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
     void NoPresionado();
 	
 	

@@ -8,6 +8,7 @@
 #include "VRPawn.h"
 #include "Engine/Engine.h"
 #include "Engine/StaticMesh.h"
+#include "LightsaberVRGameModeBase.h"
 
 ABotonExit::ABotonExit() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -98,6 +99,20 @@ void ABotonExit::Tick(float DeltaTime) {
     }
 
   
+}
+
+void ABotonExit::SendSignalPressed() {
+    Super::SendSignalPressed();
+    AGameModeBase * GameMode = UGameplayStatics::GetGameMode(GetWorld());
+    ALightsaberVRGameModeBase * LightGameMode = Cast<ALightsaberVRGameModeBase>(GameMode);
+    if (LightGameMode) {
+        //LightGameMode->QuitGame();
+
+    }
+}
+
+void ABotonExit::SendSignalReleased() {
+    UE_LOG(LogClass, Log, TEXT("Send Signal Released"));
 }
 
 void ABotonExit::OnBeginOverlapBoton(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {

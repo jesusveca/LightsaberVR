@@ -28,13 +28,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     UStaticMeshComponent * Borde;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     UCapsuleComponent * ColisionControl;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Transformation")
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     float DistanciaColision;
 	
     UFUNCTION()
@@ -43,6 +43,11 @@ public:
     UFUNCTION()
 	void OnEndOverlapBoton(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex);
 	
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
+    virtual void SendSignalPressed() override;
+
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
+    virtual void SendSignalReleased() override;
 	
 	
 };

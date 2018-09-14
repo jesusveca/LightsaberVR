@@ -42,6 +42,7 @@ AEscudo::AEscudo() {
 
 	Escudo->SetWorldScale3D(FVector(0.7f, 0.7f, 1.0f));
 	Escudo->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	Escudo->SetRelativeRotation(FRotator(90.0f, 90.0f, 0.0f));
 	if (EscudoAsset.Succeeded()) {
 		Escudo->SetStaticMesh(EscudoAsset.Object);
 		if (EscudoMaterial.Succeeded()) {
@@ -68,8 +69,10 @@ AEscudo::AEscudo() {
 	//ColisionEscudo = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ColisionEscudo"));
 	ColisionEscudo->SetupAttachment(RootComponent);
 	ColisionEscudo->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	ColisionEscudo->SetRelativeScale3D(FVector(0.1f, 20.0f, 20.0f));
+
 	//ColisionEscudo->InitCapsuleSize(600.0f, 600.0f);
-	ColisionEscudo->SetBoxExtent(FVector(10.0f, 10.0f, 10.0f));
+	ColisionEscudo->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 	//ColisionEscudo->InitBoxExtent(FVector(10.0f, 10.0f, 10.0f));
 	ColisionEscudo->OnComponentBeginOverlap.AddDynamic(this, &AEscudo::OnBeginOverlapEscudo);
 	ColisionEscudo->OnComponentEndOverlap.AddDynamic(this, &AEscudo::OnEndOverlapEscudo);
@@ -96,9 +99,10 @@ void AEscudo::Tick(float DeltaTime) {
 	if (bAnimando) {
 		if (bActivado) {//he activado, y esto animando, osea sale la espada hasta escala 1
 			FVector Escala = Escudo->GetRelativeTransform().GetScale3D();
-			Escala += FVector(0.0f,  0.0f, VelocidadActivacion*DeltaTime);
-			if (Escala.Z >= 4.0f) {
-				Escala.Z = 4.0f;
+			Escala += FVector(0.0f, VelocidadActivacion*DeltaTime, VelocidadActivacion*DeltaTime);
+			if (Escala.Z >= 6.0f) {
+				Escala.Z = 6.0f;
+				Escala.Y = 6.0f;
 				bAnimando = false;
 			}
 
@@ -106,9 +110,10 @@ void AEscudo::Tick(float DeltaTime) {
 		}
 		else {//he activado, y esto animando, osea sale la espada hasta escala 1
 			FVector Escala = Escudo->GetRelativeTransform().GetScale3D();
-			Escala += FVector(-0.0f, 0.0f, -VelocidadActivacion * DeltaTime);
+			Escala += FVector(-0.0f, -VelocidadActivacion * DeltaTime, -VelocidadActivacion * DeltaTime);
 			if (Escala.Z <= 0.0f) {
 				Escala.Z = 0.0f;
+				Escala.Y = 0.0f;
 				bAnimando = false;
 				Escudo->SetVisibility(false);
 			}

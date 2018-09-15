@@ -40,9 +40,9 @@ AEscudo::AEscudo() {
 	//static ConstructorHelpers::FObjectFinder<UStaticMesh> LaserExtremoAsset(TEXT("StaticMesh'/Game/LightsaberVR/Meshes/Lightsaber/SableLaserExtremo.SableLaserExtremo'"));
 	static ConstructorHelpers::FObjectFinder<UMaterial> EscudoMaterial(TEXT("Material'/Game/LightsaberVR/Materials/HandleSaberMaterial.HandleSaberMaterial'"));
 
-	Escudo->SetWorldScale3D(FVector(0.7f, 0.7f, 1.0f));
+	Escudo->SetWorldScale3D(FVector(0.05f, 0.1f, 1.0f));
 	Escudo->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	Escudo->SetRelativeRotation(FRotator(90.0f, 90.0f, 0.0f));
+	Escudo->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 	if (EscudoAsset.Succeeded()) {
 		Escudo->SetStaticMesh(EscudoAsset.Object);
 		if (EscudoMaterial.Succeeded()) {
@@ -69,10 +69,10 @@ AEscudo::AEscudo() {
 	//ColisionEscudo = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ColisionEscudo"));
 	ColisionEscudo->SetupAttachment(RootComponent);
 	ColisionEscudo->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	ColisionEscudo->SetRelativeScale3D(FVector(0.1f, 20.0f, 20.0f));
+	ColisionEscudo->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 
 	//ColisionEscudo->InitCapsuleSize(600.0f, 600.0f);
-	ColisionEscudo->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
+	ColisionEscudo->SetBoxExtent(FVector(25.0f, 700.0f, 700.0f));
 	//ColisionEscudo->InitBoxExtent(FVector(10.0f, 10.0f, 10.0f));
 	ColisionEscudo->OnComponentBeginOverlap.AddDynamic(this, &AEscudo::OnBeginOverlapEscudo);
 	ColisionEscudo->OnComponentEndOverlap.AddDynamic(this, &AEscudo::OnEndOverlapEscudo);
@@ -85,7 +85,8 @@ AEscudo::AEscudo() {
 	Escudo->SetVisibility(false);
 
 	//Escudo->SetRelativeScale3D(FVector(0.1f, 5.1f, 5.1f));  // girar la mano y mango
-	Escudo->SetRelativeScale3D(FVector(0.1f, 5.1f, 5.1f));
+	Escudo->SetRelativeRotation(FRotator(90.0f, 90.0f, 0.0f));
+	Escudo->SetRelativeScale3D(FVector(0.1f, 10.0f, 10.0f));
 
 }
 
@@ -100,9 +101,9 @@ void AEscudo::Tick(float DeltaTime) {
 		if (bActivado) {//he activado, y esto animando, osea sale la espada hasta escala 1
 			FVector Escala = Escudo->GetRelativeTransform().GetScale3D();
 			Escala += FVector(0.0f, VelocidadActivacion*DeltaTime, VelocidadActivacion*DeltaTime);
-			if (Escala.Z >= 6.0f) {
-				Escala.Z = 6.0f;
-				Escala.Y = 6.0f;
+			if (Escala.Z >= 10.0f) {
+				Escala.Z = 10.0f;
+				Escala.Y = 10.0f;
 				bAnimando = false;
 			}
 

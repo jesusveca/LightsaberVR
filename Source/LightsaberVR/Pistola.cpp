@@ -14,7 +14,6 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
-#include "AdisparitosProjectile.h"
 #include "MyProyectil.h"
 
 // Sets default values
@@ -124,7 +123,7 @@ void APistola::AccionPrincipal()
                 UE_LOG(LogClass, Log, TEXT("SEGUNDO PASO"));
                 const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
                 UE_LOG(LogClass, Log, TEXT("TERCERO PASO"));
-                World->SpawnActor<AAdisparitosProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+                World->SpawnActor<AProyectil>(ProjectileClass, SpawnLocation, SpawnRotation);
                 // World->SpawnActor<AProyectil>(ProjectileClass, SpawnLocation, SpawnRotation);
                 // World->SpawnActor<AProyectilEnemigo>(ProjectileClass, SpawnLocation, SpawnRotation);
                 UE_LOG(LogClass, Log, TEXT("TERMINE"));

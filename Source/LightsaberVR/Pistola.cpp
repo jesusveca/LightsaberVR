@@ -5,8 +5,18 @@
 #include "Engine/StaticMesh.h"
 #include "Engine/Engine.h"
 #include "Materials/Material.h"
+
+#include "Animation/AnimInstance.h"
+#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Proyectil.h"
+#include "Components/InputComponent.h"
+#include "GameFramework/InputSettings.h"
+#include "HeadMountedDisplayFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "MotionControllerComponent.h"
+#include "AdisparitosProjectile.h"
+#include "MyProyectil.h"
+
 // Sets default values
 APistola::APistola()
 {
@@ -30,6 +40,16 @@ APistola::APistola()
     }
     MeshPistola->SetCollisionProfileName(TEXT("Arma"));
     MeshPistola->SetSimulatePhysics(true);
+    MeshPistola->SetRelativeLocation(FVector(90.0f, 0.0f, 0.0f));
+
+    PuntoDisparo = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
+    PuntoDisparo->SetupAttachment(MeshPistola);
+    PuntoDisparo->SetRelativeLocation(FVector(0.0f, 0.0f, -10.0f));
+    // PuntoDisparo->SetRelativeRotation(FRotator(0.0f,270.0f, 270.0f));
+
+    // Default offset from the character location for projectiles to spawn
+    GunOffset = FVector(0.0f, 0.0f, 10.0f);
+
     ColisionPistola = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ColisionPistola"));
     ColisionPistola->SetupAttachment(RootComponent);
     ColisionPistola->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
@@ -87,26 +107,89 @@ void APistola::AccionPrincipal()
     //     PistolaExtremo->SetVisibility(true);
     //     //debo iniciar animacion
     // }
+
+    // try and fire a projectile
+    if (ProjectileClass != NULL)
+    {
+        UWorld *const World = GetWorld();
+        if (World != NULL)
+        {
+            if (bUsingMotionControllers)
+            {
+
+                if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
+                    GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("bUsingMotionControllers"));
+                UE_LOG(LogClass, Log, TEXT("PRIMER PASO"));
+                const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
+                UE_LOG(LogClass, Log, TEXT("SEGUNDO PASO"));
+                const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
+                UE_LOG(LogClass, Log, TEXT("TERCERO PASO"));
+                World->SpawnActor<AAdisparitosProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+                // World->SpawnActor<AProyectil>(ProjectileClass, SpawnLocation, SpawnRotation);
+                // World->SpawnActor<AProyectilEnemigo>(ProjectileClass, SpawnLocation, SpawnRotation);
+                UE_LOG(LogClass, Log, TEXT("TERMINE"));
+            }
+            else
+            {
+
+                if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
+                    GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("no bUsingMotionControllers"));
+                UE_LOG(LogClass, Log, TEXT("N PRIMER PASO"));
+                const FRotator SpawnRotation = PuntoDisparo->GetComponentRotation();//GetActorRotation(); //MeshPistola->GetOwner()->GetActorRotation();//GetActorRotation(); //GetOwner()->GetActorRotation();//GetControlRotation();
+                UE_LOG(LogClass, Log, TEXT("N SEGUNDO PASO "));
+
+                // MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+                const FVector SpawnLocation = ((PuntoDisparo != nullptr) ? PuntoDisparo->GetComponentLocation() : GetActorLocation());// + SpawnRotation.RotateVector(GunOffset);
+                UE_LOG(LogClass, Log, TEXT("N TERCER PASO"));
+                //Set Spawn Collision Handling Override
+                FActorSpawnParameters ActorSpawnParams;
+                UE_LOG(LogClass, Log, TEXT("N CUARTO PASO"));
+                ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;//AdjustIfPossibleButDontSpawnIfColliding;
+                ActorSpawnParams.Instigator=Instigator;
+                ActorSpawnParams.Owner=this;
+                UE_LOG(LogClass, Log, TEXT("N QUINTO PASO"));
+                // spawn the projectile at the muzzle
+                // AProyectil *const Proyectil = Cast<AProyectil>(ProjectileClass);
+                // Proyectil->Lanzar();
+                // World->SpawnActor<AProyectil>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+                
+
+                //IF GETACERTADOS()==5
+                //PROYECTIL CARGADO
+                //ELSE
+                //OTRO
+                
+                AProyectil * bala = World->SpawnActor<AProyectil>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+                if(bala)
+                bala->Lanzar();
+                // World->SpawnActor<AProyectilEnemigo>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+                UE_LOG(LogClass, Log, TEXT("FIN"));
+            }
+        }
+    }
+    // try and play the sound if specified
+    if (FireSound != NULL)
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+    }
 }
 
 void APistola::AccionSecundaria()
 {
-        if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
+    if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
         GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Accion Secundaria"));
 }
 
-// void APistola::Sujetar(UMotionControllerComponent *Controller)
-void APistola::Sujetar()
+void APistola::Sujetar(UMotionControllerComponent *Controller)
 {
     if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
         GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Sugetando pistola"));
     MeshPistola->SetSimulatePhysics(false);
-    // AttachToComponent(Controller, FAttachmentTransformRules::KeepRelativeTransform);
+    AttachToComponent(Controller, FAttachmentTransformRules::KeepRelativeTransform);
 
-    // SetActorRelativeLocation(FVector(0.0, 0.0, -2.0f));
-    // SetActorRelativeRotation(FRotator(0.0f, 270.0f, 0.0f));
-    // AProyectil *const Proyectil = Cast<AProyectil>(Controller);
-    // Proyectil->Lanzar();
+    SetActorRelativeLocation(FVector(0.0, 0.0, -2.0f));
+    // SetActorRelativeRotation(FRotator(270.0f,0.0f, 0.0f));
+    SetActorRelativeRotation(FRotator(210.0f,0.0f, 0.0f));
 }
 
 void APistola::Soltar()

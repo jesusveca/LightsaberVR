@@ -80,6 +80,12 @@ public:
     float Velocidad;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    float VelocidadDash;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    float DistanciaDash;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
     bool bGrabRightArma;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")

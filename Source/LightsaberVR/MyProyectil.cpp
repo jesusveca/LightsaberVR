@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include "MyProyectil.h"
 #include "Public/UObject/ConstructorHelpers.h"
 #include "Engine/Engine.h"
 #include "Engine/StaticMesh.h"
@@ -8,7 +8,7 @@
 #include "VRPawn.h"
 
 
-#include "MyProyectil.h"
+
 
 // Sets default values
 AMyProyectil::AMyProyectil()

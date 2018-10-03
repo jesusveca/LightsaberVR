@@ -84,4 +84,9 @@ class LIGHTSABERVR_API APistola : public AArma
 
 	UFUNCTION()
 	void OnEndOverlapPistola(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex);
+
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+		TSubclassOf<UDamageType> DamageType;
 };

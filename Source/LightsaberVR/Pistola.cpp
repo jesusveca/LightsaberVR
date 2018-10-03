@@ -110,7 +110,15 @@ void APistola::AccionPrincipal()
     // try and fire a projectile
     if (ProjectileClass != NULL)
     {
+		if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("HIT"));
+		FHitResult Hit;
         UWorld *const World = GetWorld();
+		AActor *MyOwner = GetOwner();
+		if (MyOwner)
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("TENGO DUEÑO"));
+		else 
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("NO TENGO DUEÑO"));
         if (World != NULL)
         {
             if (bUsingMotionControllers)
@@ -130,6 +138,7 @@ void APistola::AccionPrincipal()
             }
             else
             {
+
 
                 if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
                     GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("no bUsingMotionControllers"));

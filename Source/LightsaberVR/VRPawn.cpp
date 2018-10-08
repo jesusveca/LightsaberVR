@@ -27,10 +27,11 @@ AVRPawn::AVRPawn()
     VRCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("VRCamera"));
     VRCamera->SetupAttachment(RootComponent);
 
-    ColisionHead = CreateDefaultSubobject<USphereComponent>(TEXT("ColisionHead"));
+    ColisionHead = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ColisionHead"));
     ColisionHead->SetupAttachment(VRCamera);
-    ColisionHead->SetRelativeLocation(FVector::ZeroVector);
-    ColisionHead->InitSphereRadius(20.0f);
+    ColisionHead->SetRelativeLocation(FVector(0.0f, 0.0f, -100.0f));
+    //ColisionHead->InitSphereRadius(20.0f);
+    ColisionHead->InitCapsuleSize(35.0f, 140.0f);
 
     /*Capture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Capture"));
     Capture->SetupAttachment(VRCamera);

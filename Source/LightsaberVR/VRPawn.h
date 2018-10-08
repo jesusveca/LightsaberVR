@@ -44,7 +44,7 @@ public:
     UCameraComponent * VRCamera;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
-    USphereComponent * ColisionHead;
+    UCapsuleComponent * ColisionHead;
     
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
     class UMotionControllerComponent * MotionControllerLeft;

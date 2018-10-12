@@ -172,6 +172,7 @@ void AVRPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 
 void AVRPawn::OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {
+    FeedbackContactoRight();
     if (bBuscarArmaRight) {
         if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && (OtherActor != GetOwner())) { //no es necesario el ultimo, solo para este caso particular en el que no quiero que el propio conejo active esta funconalidad
             //en realidad deberia haber un if afuera de cada uno de estos, verifcando que este en alguna tarea de casa o robot, si esttoy en no task de alguno de ellos no deberia estar conviriendo
@@ -372,5 +373,11 @@ void AVRPawn::SecondActionLeftPressed() {
 }
 
 void AVRPawn::SecondActionLeftReleased() {
+}
+
+void AVRPawn::FeedbackContactoRight_Implementation() {
+}
+
+void AVRPawn::FeedbackContactoLeft_Implementation() {
 }
 

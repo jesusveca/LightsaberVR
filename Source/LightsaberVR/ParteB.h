@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Arma.h"
 #include "Components/BoxComponent.h"
+#include "Materials/Material.h"
 #include "ParteB.generated.h"
 
 /**
@@ -45,6 +46,16 @@ public:
     UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
     virtual void Soltar() override;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Transformation")
+	UMaterial * MaterialNormal;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Transformation")
+	UMaterial * MaterialActive;
 	
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
+    void ActivateObjetivo();
+
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
+    void DeactivateObjetivo();
 	
 };

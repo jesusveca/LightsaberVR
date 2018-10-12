@@ -16,5 +16,4 @@ class LIGHTSABERVR_API AObjetivoA : public AParte
 	
 	
 	
-	
 };

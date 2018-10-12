@@ -170,4 +170,13 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "VRPawn")
     void SecondActionLeftReleased();
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "VRPawn")
+    void FeedbackContactoRight();
+    void FeedbackContactoRight_Implementation();
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "VRPawn")
+    void FeedbackContactoLeft();
+    void FeedbackContactoLeft_Implementation();
+
 };

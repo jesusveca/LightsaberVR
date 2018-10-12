@@ -99,13 +99,14 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
     TSubclassOf<AProyectilEnemigo> TipoProyectil;//esto no es practio llenarlo en el cosntructor, cuando esta clase pase a bluprint sera mejor
 
-    UFUNCTION(BlueprintCallable, Category = "JuegoRobot")
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "LightsaberVR")
     void Disparar();
+    void Disparar_Implementation();
 
-    UFUNCTION(BlueprintCallable, Category = "JuegoRobot")
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
     void IniciarDisparos();
 
-    UFUNCTION(BlueprintCallable, Category = "JuegoRobot")
+    UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
     void DetenerDisparos();
 
     FTimerHandle TimerDisparo;

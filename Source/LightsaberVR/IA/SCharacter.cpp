@@ -39,7 +39,7 @@ ASCharacter::ASCharacter()
 
     PuntoDisparo = CreateDefaultSubobject<USceneComponent>(TEXT("PuntoDisparo"));
     PuntoDisparo->SetupAttachment(RootComponent);
-    PuntoDisparo->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+    PuntoDisparo->SetRelativeLocation(FVector(0.0f, 0.0f, 30.0f));
 
     static ConstructorHelpers::FClassFinder<AProyectilEnemigo> ProyectilClass(TEXT("Class'/Script/LightsaberVR.ProyectilEnemigo'"));
     if (ProyectilClass.Succeeded()) {
@@ -117,7 +117,7 @@ void ASCharacter::StopFire()
 	}
 }
 
-void ASCharacter::Disparar() {
+void ASCharacter::Disparar_Implementation() {
     UWorld * const World = GetWorld();
     if (World) {
         FActorSpawnParameters SpawnParams;

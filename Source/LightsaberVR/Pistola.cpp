@@ -55,6 +55,8 @@ APistola::APistola()
     ColisionPistola->InitCapsuleSize(1.5f, 51.0f);
     ColisionPistola->OnComponentBeginOverlap.AddDynamic(this, &APistola::OnBeginOverlapPistola);
     ColisionPistola->OnComponentEndOverlap.AddDynamic(this, &APistola::OnEndOverlapPistola);
+
+    ColisionPistola->Activate(false);
 }
 
 void APistola::BeginPlay()

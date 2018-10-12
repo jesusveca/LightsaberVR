@@ -69,4 +69,8 @@ public:
 
     UFUNCTION()
 	void OnEndOverlapLaser(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex);
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "LightsaberVR")
+    void TocarAlgo();
+    void TocarAlgo_Implementation();
 };

@@ -59,6 +59,7 @@ ASable::ASable() {
     ColisionLaser = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ColisionLaser"));
     ColisionLaser->SetupAttachment(RootComponent);
     ColisionLaser->SetRelativeLocation(FVector(0.0f, 0.0f, 61.0f));
+    ColisionLaser->SetRelativeScale3D(FVector(0.0f));
     ColisionLaser->InitCapsuleSize(1.5f, 51.0f);
     ColisionLaser->OnComponentBeginOverlap.AddDynamic(this, &ASable::OnBeginOverlapLaser);
     ColisionLaser->OnComponentEndOverlap.AddDynamic(this, &ASable::OnEndOverlapLaser);
@@ -98,6 +99,7 @@ void ASable::Tick(float DeltaTime) {
                 bAnimando = false;
                 Laser->SetVisibility(false);
                 LaserExtremo->SetVisibility(false);
+                ColisionLaser->SetRelativeScale3D(FVector(0.0f));
             }
             Laser->SetRelativeScale3D(Escala);
         }
@@ -114,6 +116,7 @@ void ASable::AccionPrincipal() {
         bAnimando = true;
         Laser->SetVisibility(true);
         LaserExtremo->SetVisibility(true);
+        ColisionLaser->SetRelativeScale3D(FVector(1.0f));
         //debo iniciar animacion
     }
 }
@@ -122,6 +125,7 @@ void ASable::AccionSecundaria() {
 }
 
 void ASable::Sujetar(UMotionControllerComponent * Controller) {
+    Holder = Controller;
     SableMango->SetSimulatePhysics(false);
     AttachToComponent(Controller, FAttachmentTransformRules::KeepRelativeTransform);
     SetActorRelativeLocation(FVector(0.0, 0.0, -2.0f));
@@ -130,10 +134,12 @@ void ASable::Sujetar(UMotionControllerComponent * Controller) {
 
 void ASable::Soltar() {
     SableMango->SetSimulatePhysics(true);
+    Holder = nullptr;
 }
 
 void ASable::OnBeginOverlapLaser(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {
     if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && (OtherActor != GetOwner())) { //no es necesario el ultimo, solo para este caso particular en el que no quiero que el propio conejo active esta funconalidad
+        TocarAlgo();
         AProyectilEnemigo * const Proyectil = Cast<AProyectilEnemigo>(OtherActor);
         if (Proyectil && !Proyectil->IsPendingKill()) {
             USphereComponent * const ColisionProyectil= Cast<USphereComponent>(OtherComp);//para la casa no necesito verificar que haya tocado su staticmesh
@@ -155,4 +161,8 @@ void ASable::OnBeginOverlapLaser(UPrimitiveComponent * OverlappedComponent, AAct
 }
 
 void ASable::OnEndOverlapLaser(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex) {
+}
+
+void ASable::TocarAlgo_Implementation() {
+    //que vibre algo
 }

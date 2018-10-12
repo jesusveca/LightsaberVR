@@ -38,6 +38,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "LightsaberVR")
 	virtual void Soltar();
 
-	
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
+    UMotionControllerComponent * Holder;
 	
 };

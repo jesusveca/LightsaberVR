@@ -68,8 +68,8 @@ void APistola::OnBeginOverlapPistola(UPrimitiveComponent *OverlappedComponent, A
 {
     if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && (OtherActor != GetOwner()))
     {
-        if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
-            GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("oVERLAPsIPISTLA"));
+        //if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
+            //GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("oVERLAPsIPISTLA"));
 
         // AProyectilEnemigo *const Proyectil = Cast<AProyectilEnemigo>(OtherActor);
         // if (Proyectil && !Proyectil->IsPendingKill())
@@ -95,7 +95,7 @@ void APistola::OnEndOverlapPistola(UPrimitiveComponent *OverlappedComponent, AAc
 
 void APistola::AccionPrincipal()
 {
-    if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
+    /*if (GEngine) //no hacer esta verificaci�n provocaba error al iniciar el editor
         GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Accion Principal"));
     // if (bActivado) {
     //     bActivado = false;
@@ -176,6 +176,19 @@ void APistola::AccionPrincipal()
                 UE_LOG(LogClass, Log, TEXT("FIN"));
             }
         }
+    }*/
+
+    UWorld * const World = GetWorld();
+    if (World) {
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.Owner = this;
+        SpawnParams.Instigator = Instigator;
+        SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        FVector SpawnLocation = PuntoDisparo->GetComponentLocation();
+        FRotator SpawnRotator = PuntoDisparo->GetComponentRotation();
+        AProyectil* Proyectil = World->SpawnActor<AProyectil>(ProjectileClass, SpawnLocation, SpawnRotator, SpawnParams);//recibe el punto pero del mundo, no el local, lo podemos ver como vector
+        if(Proyectil)
+            Proyectil->Lanzar();
     }
     // try and play the sound if specified
     if (FireSound != NULL)

@@ -44,7 +44,7 @@ public:
     UCameraComponent * VRCamera;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
-    USphereComponent * ColisionHead;
+    UCapsuleComponent * ColisionHead;
     
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
     class UMotionControllerComponent * MotionControllerLeft;
@@ -170,4 +170,19 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "VRPawn")
     void SecondActionLeftReleased();
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "VRPawn")
+    void FeedbackContactoRight();
+    void FeedbackContactoRight_Implementation();
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "VRPawn")
+    void FeedbackContactoLeft();
+    void FeedbackContactoLeft_Implementation();
+
+    float VidaMaxima;
+
+    float VidaActual;
+
+    void RecibirAtaque(float Golpe);
+
 };

@@ -11,6 +11,7 @@
 #include "Materials/Material.h"
 #include "Kismet/GameplayStatics.h"
 #include "Public/HeadMountedDisplayFunctionLibrary.h"
+#include "LightsaberVRGameModeBase.h"
 #include <limits>
 
 
@@ -27,10 +28,11 @@ AVRPawn::AVRPawn()
     VRCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("VRCamera"));
     VRCamera->SetupAttachment(RootComponent);
 
-    ColisionHead = CreateDefaultSubobject<USphereComponent>(TEXT("ColisionHead"));
+    ColisionHead = CreateDefaultSubobject<UCapsuleComponent>(TEXT("ColisionHead"));
     ColisionHead->SetupAttachment(VRCamera);
-    ColisionHead->SetRelativeLocation(FVector::ZeroVector);
-    ColisionHead->InitSphereRadius(20.0f);
+    ColisionHead->SetRelativeLocation(FVector(0.0f, 0.0f, -100.0f));
+    //ColisionHead->InitSphereRadius(20.0f);
+    ColisionHead->InitCapsuleSize(35.0f, 140.0f);
 
     /*Capture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Capture"));
     Capture->SetupAttachment(VRCamera);
@@ -102,6 +104,8 @@ AVRPawn::AVRPawn()
     Velocidad = 200.0f;
     VelocidadDash = 1000.0f;
     DistanciaDash = 1000.0f;
+    VidaMaxima = 100.0f;
+    VidaActual = VidaMaxima;
 
 }
 
@@ -171,6 +175,7 @@ void AVRPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 
 void AVRPawn::OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {
+    FeedbackContactoRight();
     if (bBuscarArmaRight) {
         if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && (OtherActor != GetOwner())) { //no es necesario el ultimo, solo para este caso particular en el que no quiero que el propio conejo active esta funconalidad
             //en realidad deberia haber un if afuera de cada uno de estos, verifcando que este en alguna tarea de casa o robot, si esttoy en no task de alguno de ellos no deberia estar conviriendo
@@ -191,6 +196,7 @@ void AVRPawn::OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComp
 }
 
 void AVRPawn::OnBeginOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {
+    FeedbackContactoLeft();
     if (bBuscarArmaLeft&& !bGrabLeftArma) {
         AArma * const Arma = Cast<AArma>(OtherActor);
         if (Arma && !Arma->IsPendingKill()) {
@@ -371,5 +377,25 @@ void AVRPawn::SecondActionLeftPressed() {
 }
 
 void AVRPawn::SecondActionLeftReleased() {
+}
+
+void AVRPawn::FeedbackContactoRight_Implementation() {
+}
+
+void AVRPawn::FeedbackContactoLeft_Implementation() {
+}
+
+void AVRPawn::RecibirAtaque(float Golpe) {
+    VidaActual -= Golpe;
+    if (VidaActual <= 0) {
+        if (GetWorld()) {
+            AGameModeBase * GameMode = UGameplayStatics::GetGameMode(GetWorld());
+            ALightsaberVRGameModeBase * LGameMode = Cast<ALightsaberVRGameModeBase>(GameMode);
+            if (LGameMode) {
+                LGameMode->PerderJuego();
+            }
+        }
+        //llamar a game mode para terminar el juego
+    }
 }
 

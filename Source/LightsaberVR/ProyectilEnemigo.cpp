@@ -15,7 +15,7 @@ AProyectilEnemigo::AProyectilEnemigo()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
     Velocidad = 1000.0f;
-    Poder = 30.0f;
+    Poder = 12.5f;
     bLanzado = false;
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
@@ -77,9 +77,9 @@ void AProyectilEnemigo::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent
             GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Overlap"));
         AVRPawn * const Player = Cast<AVRPawn>(OtherActor);
         if (Player && !Player->IsPendingKill()) {
-            USphereComponent * const CuerpoPlayer = Cast<USphereComponent>(OtherComp);
+            UCapsuleComponent * const CuerpoPlayer = Cast<UCapsuleComponent>(OtherComp);
             if(CuerpoPlayer){
-                //Player->RecibirAtaque(Poder, GetActorLocation());
+                Player->RecibirAtaque(Poder);
                 Destroy();
             }
         }

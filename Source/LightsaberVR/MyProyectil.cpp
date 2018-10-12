@@ -9,7 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 
 
-#include "VRPawn.h"
+/*#include "VRPawn.h"
 #include "./IA/SCharacter.h"
 // Sets default values
 AMyProyectil::AMyProyectil()
@@ -86,7 +86,7 @@ void AMyProyectil::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AAc
 				UGameplayStatics::SpawnEmitterAtLocation(World, EfectoImpacto->Template, FTransform(FRotator::ZeroRotator, GetActorLocation()));
 			}
 			Destroy();
-		}*/
+		}* /
 	}
 
-}
+}*/

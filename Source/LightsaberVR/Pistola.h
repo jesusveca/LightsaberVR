@@ -8,7 +8,6 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Proyectil.h"
-#include "MyProyectil.h" 
 #include "ProyectilEnemigo.h"
 #include "Pistola.generated.h"
 
@@ -47,11 +46,8 @@ class LIGHTSABERVR_API APistola : public AArma
 	class USceneComponent *VR_MuzzleLocation;
 
 	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	// TSubclassOf<class AProyectil> ProjectileClass;
-	// TSubclassOf<class AAdisparitosProjectile> ProjectileClass;
-	// TSubclassOf<class AProyectilEnemigo> ProjectileClass;
-	TSubclassOf<class AMyProyectil> ProjectileClass;
+	UPROPERTY(EditDefaultsOnly, Category = "LightsaberVR")
+	TSubclassOf<AProyectil> ProjectileClass;
 
 	/** Whether to use motion controller location for aiming. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)

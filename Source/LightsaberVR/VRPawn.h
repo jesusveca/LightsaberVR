@@ -179,4 +179,10 @@ public:
     void FeedbackContactoLeft();
     void FeedbackContactoLeft_Implementation();
 
+    float VidaMaxima;
+
+    float VidaActual;
+
+    void RecibirAtaque(float Golpe);
+
 };

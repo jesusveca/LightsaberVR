@@ -110,4 +110,10 @@ public:
     void DetenerDisparos();
 
     FTimerHandle TimerDisparo;
+
+    float VidaMaxima;
+
+    float VidaActual;
+
+    void RecibirAtaque(float Golpe);
 };

@@ -19,7 +19,7 @@ class LIGHTSABERVR_API AMyProyectil : public AProyectil
 	GENERATED_BODY()
 	
 	
-public:	
+/*public:	
 	// Sets default values for this actor's properties
 	AMyProyectil();
 
@@ -37,9 +37,7 @@ public:
 	UFUNCTION()
 		void OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LightSaberVR")
-		USphereComponent * Colision;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LightSaberVR")
-		TSubclassOf<UDamageType> DamageType;
+		TSubclassOf<UDamageType> DamageType;*/
 };

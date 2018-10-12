@@ -6,6 +6,7 @@
 #include "Materials/Material.h"
 #include "ProyectilEnemigo.h"
 #include "Components/CapsuleComponent.h"
+#include "IA/SCharacter.h"
 
 ASable::ASable() {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -145,6 +146,10 @@ void ASable::OnBeginOverlapLaser(UPrimitiveComponent * OverlappedComponent, AAct
                 else if (ColisionController->GetName() == "ColisionControllerLeft") {
                 }*/
             }
+        }
+        ASCharacter * const Enemigo = Cast<ASCharacter>(OtherActor);
+        if (Enemigo && !Enemigo->IsPendingKill()) {
+            Enemigo->RecibirAtaque(50.0f);
         }
     }
 }

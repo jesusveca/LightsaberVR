@@ -45,6 +45,9 @@ ASCharacter::ASCharacter()
     if (ProyectilClass.Succeeded()) {
         TipoProyectil = ProyectilClass.Class;
     }
+
+    VidaMaxima = 100.0f;
+    VidaActual = VidaMaxima;
 }
 
 // Called when the game starts or when spawned
@@ -127,8 +130,6 @@ void ASCharacter::Disparar_Implementation() {
         FVector SpawnLocation = PuntoDisparo->GetComponentLocation();
         FRotator SpawnRotator = PuntoDisparo->GetComponentRotation();
         AProyectilEnemigo * Proyectil = World->SpawnActor<AProyectilEnemigo>(TipoProyectil, SpawnLocation, SpawnRotator, SpawnParams);//recibe el punto pero del mundo, no el local, lo podemos ver como vector
-        //ABolaChocolate * BolaChocolate = World->SpawnActor<ABolaChocolate>(TipoBolaChocolate, GetActorLocation() + PuntoLanzamiento, GetActorRotation(), SpawnParams);//recibe el punto pero del mundo, no el local, lo podemos ver como vector
-        //ABolaChocolate * BolaChocolate = World->SpawnActor<ABolaChocolate>(TipoBolaChocolate, GetActorLocation() + GetTransform().InverseTransformPostion(PuntoLanzamiento), GetActorRotation(), SpawnParams);//recibe el punto pero del mundo, no el local, lo podemos ver como vector
         if(Proyectil)
             Proyectil->Lanzar();
     }
@@ -140,6 +141,13 @@ void ASCharacter::IniciarDisparos() {
 
 void ASCharacter::DetenerDisparos() {
     GetWorldTimerManager().ClearTimer(TimerDisparo);
+}
+
+void ASCharacter::RecibirAtaque(float Golpe) {
+    VidaActual -= Golpe;
+    if (VidaActual <= 0) {
+        Destroy();
+    }
 }
 
 void ASCharacter::OnHealthChanged(USHealthComponent *OwningHealthComp, float Health, float HealthDelta, const class UDamageType *DamageType,

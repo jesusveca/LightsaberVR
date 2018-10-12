@@ -8,7 +8,8 @@
 #include "Components/CapsuleComponent.h"
 #include "LightsaberVR.h"
 #include "./Components/SHealthComponent.h"
-
+#include "Public/UObject/ConstructorHelpers.h"
+#include "TimerManager.h"
 #include "Weapon.h"
 #include "Net/UnrealNetwork.h"
 
@@ -35,6 +36,15 @@ ASCharacter::ASCharacter()
 	ZoomInterpSpeed = 20;
 
 	WeaponAttachSocketName = "WeaponSocket";
+
+    PuntoDisparo = CreateDefaultSubobject<USceneComponent>(TEXT("PuntoDisparo"));
+    PuntoDisparo->SetupAttachment(RootComponent);
+    PuntoDisparo->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+
+    static ConstructorHelpers::FClassFinder<AProyectilEnemigo> ProyectilClass(TEXT("Class'/Script/LightsaberVR.ProyectilEnemigo'"));
+    if (ProyectilClass.Succeeded()) {
+        TipoProyectil = ProyectilClass.Class;
+    }
 }
 
 // Called when the game starts or when spawned
@@ -105,6 +115,31 @@ void ASCharacter::StopFire()
 	{
 		CurrentWeapon->StopFire();
 	}
+}
+
+void ASCharacter::Disparar() {
+    UWorld * const World = GetWorld();
+    if (World) {
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.Owner = this;
+        SpawnParams.Instigator = Instigator;
+        SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        FVector SpawnLocation = PuntoDisparo->GetComponentLocation();
+        FRotator SpawnRotator = PuntoDisparo->GetComponentRotation();
+        AProyectilEnemigo * Proyectil = World->SpawnActor<AProyectilEnemigo>(TipoProyectil, SpawnLocation, SpawnRotator, SpawnParams);//recibe el punto pero del mundo, no el local, lo podemos ver como vector
+        //ABolaChocolate * BolaChocolate = World->SpawnActor<ABolaChocolate>(TipoBolaChocolate, GetActorLocation() + PuntoLanzamiento, GetActorRotation(), SpawnParams);//recibe el punto pero del mundo, no el local, lo podemos ver como vector
+        //ABolaChocolate * BolaChocolate = World->SpawnActor<ABolaChocolate>(TipoBolaChocolate, GetActorLocation() + GetTransform().InverseTransformPostion(PuntoLanzamiento), GetActorRotation(), SpawnParams);//recibe el punto pero del mundo, no el local, lo podemos ver como vector
+        if(Proyectil)
+            Proyectil->Lanzar();
+    }
+}
+
+void ASCharacter::IniciarDisparos() {
+    GetWorldTimerManager().SetTimer(TimerDisparo, this, &ASCharacter::Disparar, 0.25f, true);//esto hace que llame a advance timer cada segundo que pasa
+}
+
+void ASCharacter::DetenerDisparos() {
+    GetWorldTimerManager().ClearTimer(TimerDisparo);
 }
 
 void ASCharacter::OnHealthChanged(USHealthComponent *OwningHealthComp, float Health, float HealthDelta, const class UDamageType *DamageType,

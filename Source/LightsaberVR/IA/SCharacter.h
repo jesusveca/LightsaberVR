@@ -11,7 +11,7 @@
 #include "EngineGlobals.h"
 #include "Runtime/Engine/Classes/Engine/Engine.h"
 #include "./Components/SHealthComponent.h"
-
+#include "ProyectilEnemigo.h"
 #include "SCharacter.generated.h"
 
 
@@ -92,4 +92,21 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
 		void StopFire();
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
+    USceneComponent * PuntoDisparo;
+	
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
+    TSubclassOf<AProyectilEnemigo> TipoProyectil;//esto no es practio llenarlo en el cosntructor, cuando esta clase pase a bluprint sera mejor
+
+    UFUNCTION(BlueprintCallable, Category = "JuegoRobot")
+    void Disparar();
+
+    UFUNCTION(BlueprintCallable, Category = "JuegoRobot")
+    void IniciarDisparos();
+
+    UFUNCTION(BlueprintCallable, Category = "JuegoRobot")
+    void DetenerDisparos();
+
+    FTimerHandle TimerDisparo;
 };

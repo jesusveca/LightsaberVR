@@ -193,6 +193,7 @@ void AVRPawn::OnBeginOverlapControllerRight(UPrimitiveComponent * OverlappedComp
 }
 
 void AVRPawn::OnBeginOverlapControllerLeft(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) {
+    FeedbackContactoLeft();
     if (bBuscarArmaLeft&& !bGrabLeftArma) {
         AArma * const Arma = Cast<AArma>(OtherActor);
         if (Arma && !Arma->IsPendingKill()) {

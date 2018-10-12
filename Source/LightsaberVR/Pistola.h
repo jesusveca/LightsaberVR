@@ -89,4 +89,6 @@ class LIGHTSABERVR_API APistola : public AArma
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		TSubclassOf<UDamageType> DamageType;
+
+
 };

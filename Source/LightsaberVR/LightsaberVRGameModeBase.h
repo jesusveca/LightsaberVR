@@ -29,4 +29,12 @@ public:
     void GanarJuego();
     void GanarJuego_Implementation();
 	
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
+    TSubclassOf<class APawn> Pawn1;  
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
+    TSubclassOf<class APawn> Pawn2;  
+    /* Override To Read In Pawn From Custom Controller */
+	UClass* GetDefaultPawnClassForController(AController* InController);
+
 };

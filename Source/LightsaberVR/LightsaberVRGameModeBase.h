@@ -37,4 +37,7 @@ public:
     /* Override To Read In Pawn From Custom Controller */
 	UClass* GetDefaultPawnClassForController(AController* InController);
 
+    /*UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
+    void ServerIniciarJuego();*/
+
 };

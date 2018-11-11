@@ -53,4 +53,8 @@ UClass* ALightsaberVRGameModeBase::GetDefaultPawnClassForController(AController*
 	return DefaultPawnClass;
 }
 
+/*void ALightsaberVRGameModeBase::ServerIniciarJuego() {
+    //buscar al actor puerta y abrirlo
+}*/
+
 

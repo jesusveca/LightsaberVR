@@ -68,7 +68,7 @@ void APuerta::Tick(float DeltaTime)
                 Location.Z = -200.0f;
                 bAnimando = false;
             }
-            MeshPuerta->SetRelativeScale3D(Location);
+            MeshPuerta->SetRelativeLocation(Location);
         }
     }
 }

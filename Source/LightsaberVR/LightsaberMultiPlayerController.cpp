@@ -4,6 +4,7 @@
 #include "UnrealNetwork.h"
 #include "Public/UObject/ConstructorHelpers.h"
 #include "Engine/World.h"
+#include "Blueprint/UserWidget.h"
 #include "GameFramework/GameModeBase.h"
 
 ALightsaberMultiPlayerController::ALightsaberMultiPlayerController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -17,6 +18,12 @@ ALightsaberMultiPlayerController::ALightsaberMultiPlayerController(const FObject
     if (PlayerPawnBPClass2.Succeeded()) {
         PawnToUseB = PlayerPawnBPClass2.Class;
     }
+
+    static ConstructorHelpers::FClassFinder<UUserWidget> HUDWidgetClass(TEXT("WidgetBlueprintGeneratedClass'/Game/LightsaberVR/UMG/menu.menu_C'"));
+    //deberia buscar una grafica
+    if (HUDWidgetClass.Succeeded()) {
+        TypeHUDWidget = HUDWidgetClass.Class;
+    }
  
 	/* Make sure the PawnClass is Replicated */
 	bReplicates = true;
@@ -26,6 +33,24 @@ void ALightsaberMultiPlayerController::BeginPlay() {
 	Super::BeginPlay();
  
 	DeterminePawnClass();
+    if (Role != ENetRole::ROLE_Authority) {
+        bShowMouseCursor = true;
+        FInputModeGameAndUI Mode = FInputModeGameAndUI();
+
+        if (TypeHUDWidget) {
+            UUserWidget * HUD = CreateWidget<UUserWidget>(GetWorld(), TypeHUDWidget);//le doy el mundo sobre el que se instancia, y lo que instanciare
+            if (HUD) {
+                HUD->SetOwningPlayer(this);
+                HUD->AddToViewport(1);
+                Mode.SetWidgetToFocus(HUD->TakeWidget());
+                HUD->SetUserFocus(this);
+            }
+        }
+        //que cree y luego lo agregue
+        SetInputMode(Mode);
+        bEnableMouseOverEvents = true;
+        bEnableClickEvents = true;
+    }
 }
  
 // Pawn Class

@@ -2,6 +2,7 @@
 
 #include "MasterPawn.h"
 #include "Camera/CameraComponent.h"
+#include "Components/InputComponent.h"
 
 
 // Sets default values
@@ -15,6 +16,9 @@ AMasterPawn::AMasterPawn()
 
     VRCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     VRCamera->SetupAttachment(RootComponent);
+    VRCamera->SetRelativeRotation(FRotator(-85.0f, 0.0f, 0.0f));
+
+    Velocidad = 500.0f;
 
 }
 
@@ -22,6 +26,8 @@ AMasterPawn::AMasterPawn()
 void AMasterPawn::BeginPlay()
 {
 	Super::BeginPlay();
+    SetActorLocation(FVector(-500.0f, 1500.0f, 2500.0f));
+    SetActorRotation(FRotator(0.0f, 90.0f, 0.0f));
 	
 }
 
@@ -29,6 +35,10 @@ void AMasterPawn::BeginPlay()
 void AMasterPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+    if (Movimiento != FVector::ZeroVector) {
+        FVector Desplazamiento = Movimiento.X * GetActorForwardVector() + Movimiento.Y * GetActorRightVector();
+        SetActorLocation(GetActorLocation() + Desplazamiento.GetSafeNormal()*Velocidad*DeltaTime);
+    }
 
 }
 
@@ -36,6 +46,15 @@ void AMasterPawn::Tick(float DeltaTime)
 void AMasterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+    InputComponent->BindAxis("MoveForward", this, &AMasterPawn::MoveForward);
+    InputComponent->BindAxis("MoveRight", this, &AMasterPawn::MoveRight);
+}
 
+void AMasterPawn::MoveForward(float AxisValue) {
+    Movimiento.X = AxisValue;
+}
+
+void AMasterPawn::MoveRight(float AxisValue) {
+    Movimiento.Y = AxisValue;
 }
 

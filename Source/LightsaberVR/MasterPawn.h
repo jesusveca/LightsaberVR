@@ -30,6 +30,14 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "VRPawn")
     UCameraComponent * VRCamera;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VRPawn")
+    float Velocidad;
+
+    void MoveForward(float AxisValue);
+
+    void MoveRight(float AxisValue);
+
+    FVector Movimiento;
 	
 	
 };

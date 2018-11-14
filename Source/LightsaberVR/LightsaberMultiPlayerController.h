@@ -48,6 +48,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "LightsaberVR")
 	TSubclassOf<APawn> PawnToUseB;
 	
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GeoVisualization", Meta = (BlueprintProtected = "true"))//significa que solo se puede cambiar en el constructor
+    TSubclassOf<UUserWidget> TypeHUDWidget;  
 	
 	
 };

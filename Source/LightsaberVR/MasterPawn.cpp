@@ -20,6 +20,8 @@ AMasterPawn::AMasterPawn()
 
     Velocidad = 500.0f;
 
+    bMouseInWorld = true;
+
 }
 
 // Called when the game starts or when spawned

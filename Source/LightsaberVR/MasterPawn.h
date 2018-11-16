@@ -39,5 +39,10 @@ public:
 
     FVector Movimiento;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
+	TSubclassOf<AActor> SelectedElement;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightsaberVR")
+    bool bMouseInWorld;
 	
 };

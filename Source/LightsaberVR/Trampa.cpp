@@ -12,13 +12,12 @@ ATrampa::ATrampa()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> PuertaAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
 	static ConstructorHelpers::FObjectFinder<UMaterial> PuertaMaterial(TEXT("Material'/Game/LightsaberVR/Materials/HandleSaberMaterial.HandleSaberMaterial'"));
 
 	MeshTrampa = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TrampaMesh"));
-	MeshTrampa->SetupAttachment(RootComponent);
+    RootComponent = MeshTrampa;
 
 	MeshTrampa->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 
@@ -29,6 +28,7 @@ ATrampa::ATrampa()
 			MeshTrampa->SetMaterial(0, PuertaMaterial.Object);
 		}
 	}
+    MeshTrampa->SetSimulatePhysics(true);
 
 	ColisionTrampa = CreateDefaultSubobject<USphereComponent>(TEXT("ColisionTrampa"));
 	ColisionTrampa->SetupAttachment(RootComponent);

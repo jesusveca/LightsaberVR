@@ -37,6 +37,7 @@ void ALightsaberMultiPlayerController::BeginPlay() {
         bShowMouseCursor = true;
         FInputModeGameAndUI Mode = FInputModeGameAndUI();
 
+        Mode.SetHideCursorDuringCapture(false);
         if (TypeHUDWidget) {
             UUserWidget * HUD = CreateWidget<UUserWidget>(GetWorld(), TypeHUDWidget);//le doy el mundo sobre el que se instancia, y lo que instanciare
             if (HUD) {

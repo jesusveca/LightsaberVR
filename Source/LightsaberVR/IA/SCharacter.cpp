@@ -41,7 +41,8 @@ ASCharacter::ASCharacter()
     PuntoDisparo->SetupAttachment(RootComponent);
     PuntoDisparo->SetRelativeLocation(FVector(0.0f, 0.0f, 30.0f));
 
-    static ConstructorHelpers::FClassFinder<AProyectilEnemigo> ProyectilClass(TEXT("Class'/Script/LightsaberVR.ProyectilEnemigo'"));
+    //static ConstructorHelpers::FClassFinder<AProyectilEnemigo> ProyectilClass(TEXT("Class'/Script/LightsaberVR.ProyectilEnemigo'"));
+    static ConstructorHelpers::FClassFinder<AProyectilEnemigo> ProyectilClass(TEXT("BlueprintGeneratedClass'/Game/LightsaberVR/Blueprints/Armas/ProyectilEnemigoBP.ProyectilEnemigoBP_C'"));
     if (ProyectilClass.Succeeded()) {
         TipoProyectil = ProyectilClass.Class;
     }

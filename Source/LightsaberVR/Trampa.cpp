@@ -40,7 +40,7 @@ ATrampa::ATrampa()
 	bAnimando = false;
 	bActivado = true;
 
-
+    Poder = 40.0f;
 
 
 

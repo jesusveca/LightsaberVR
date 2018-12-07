@@ -82,12 +82,12 @@ void AProyectil::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActo
             //Player->RecibirAtaque(Poder, GetActorLocation());
             Enemigo->RecibirAtaque(Poder);
         }
-        UWorld * const World = GetWorld();
+        /*UWorld * const World = GetWorld();
         if (World) {
             UGameplayStatics::SpawnEmitterAtLocation(World, EfectoImpacto->Template, FTransform(FRotator::ZeroRotator, GetActorLocation()));
-        }
+        }*/
 
-        Destroy();
+        //Destroy();
     }
 
 }

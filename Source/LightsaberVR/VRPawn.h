@@ -183,6 +183,7 @@ public:
 
     float VidaActual;
 
+    UFUNCTION(BlueprintCallable, Category = "VRPawn")
     void RecibirAtaque(float Golpe);
 
 };

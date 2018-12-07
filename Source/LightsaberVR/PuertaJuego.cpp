@@ -34,7 +34,7 @@ APuertaJuego::APuertaJuego()
 	//ColisionPuerta->OnComponentBeginOverlap.AddDynamic(this, &ASable::OnBeginOverlapLaser);
 	//ColisionLaser->OnComponentEndOverlap.AddDynamic(this, &ASable::OnEndOverlapLaser);
 
-	VelocidadActivacion = 50.0f;//escala 1 por segundo
+	VelocidadActivacion = 200.0f;//escala 1 por segundo
 	bAnimando = false;
 	bActivado = true;
 
@@ -64,8 +64,8 @@ void APuertaJuego::Tick(float DeltaTime)
 		else {//he activado, y esto animando, osea sale la espada hasta escala 1
 			FVector Location = MeshPuertaJuego->GetRelativeTransform().GetLocation();
 			Location += FVector(0.0f, 0.0f, -VelocidadActivacion * DeltaTime);
-			if (Location.Z <= -200.0f) {
-				Location.Z = -200.0f;
+			if (Location.Z <= -850.0f) {
+				Location.Z = -850.0f;
 				bAnimando = false;
 			}
 			MeshPuertaJuego->SetRelativeLocation(Location);

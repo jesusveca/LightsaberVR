@@ -18,7 +18,7 @@ AMasterPawn::AMasterPawn()
     VRCamera->SetupAttachment(RootComponent);
     VRCamera->SetRelativeRotation(FRotator(-85.0f, 0.0f, 0.0f));
 
-    Velocidad = 500.0f;
+    Velocidad = 1000.0f;
 
     bMouseInWorld = true;
 

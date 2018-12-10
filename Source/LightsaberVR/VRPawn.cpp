@@ -102,7 +102,7 @@ AVRPawn::AVRPawn()
     bBuscarArmaRight = true;
     bBuscarArmaLeft= true;
     Velocidad = 200.0f;
-    VelocidadDash = 1000.0f;
+    VelocidadDash = 3000.0f;
     DistanciaDash = 1000.0f;
     VidaMaxima = 100.0f;
     VidaActual = VidaMaxima;

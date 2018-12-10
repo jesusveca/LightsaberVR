@@ -46,6 +46,8 @@ AProyectil::AProyectil() {
 
     EfectoImpacto = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("EfectoImpacto"));
     EfectoImpacto->SetupAttachment(RootComponent);
+    EfectoImpacto->SetActive(false);
+    EfectoImpacto->SetAutoActivate(false);
 }
 
 // Called when the game starts or when spawned
@@ -79,8 +81,13 @@ void AProyectil::OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActo
         if (Enemigo && !Enemigo->IsPendingKill()) {
             //Player->RecibirAtaque(Poder, GetActorLocation());
             Enemigo->RecibirAtaque(Poder);
-            Destroy();
         }
+        /*UWorld * const World = GetWorld();
+        if (World) {
+            UGameplayStatics::SpawnEmitterAtLocation(World, EfectoImpacto->Template, FTransform(FRotator::ZeroRotator, GetActorLocation()));
+        }*/
+
+        //Destroy();
     }
 
 }

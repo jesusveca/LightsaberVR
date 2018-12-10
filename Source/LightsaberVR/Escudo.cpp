@@ -37,7 +37,7 @@ AEscudo::AEscudo() {
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> EscudoAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
 	static ConstructorHelpers::FObjectFinder<UMaterial> EscudoMaterial(TEXT("Material'/Game/LightsaberVR/Materials/EscudoMaterial.EscudoMaterial'"));
 
-	Escudo->SetWorldScale3D(FVector(0.05f, 0.1f, 1.0f));
+	Escudo->SetWorldScale3D(FVector(1.0f, 0.1f, 1.0f));
 	Escudo->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	Escudo->SetRelativeRotation(FRotator(90.0f, 90.0f, 0.0f));
 	if (EscudoAsset.Succeeded()) {
@@ -64,7 +64,7 @@ AEscudo::AEscudo() {
 	Escudo->SetVisibility(false);
 
 
-	Escudo->SetRelativeScale3D(FVector(0.1f, 10.0f, 10.0f));
+	//Escudo->SetRelativeScale3D(FVector(0.1f, 10.0f, 10.0f));
 
 }
 
